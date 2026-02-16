@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Countdown Tết 2026</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Cherry+Bomb+One&display=swap');
+        body { 
+            background-color: #283933; color: #F2D5BA; 
+            display: flex; flex-direction: column; align-items: center; justify-content: center; 
+            height: 100vh; margin: 0; font-family: 'Cherry Bomb One', cursive; overflow: hidden; 
+        }
+        .firecracker-container { position: absolute; top: 0; display: flex; gap: 15px; }
+        .left-side { left: 3%; } .right-side { right: 3%; }
+        .string { color: #A54F5E; font-size: 22px; line-height: 16px; text-align: center; }
+        h1 { font-size: 3rem; text-shadow: 4px 4px #A54F5E; text-align: center; z-index: 10; }
+        #welcome-btn { 
+            padding: 20px 50px; font-size: 22px; background-color: #A54F5E; 
+            color: #F2D5BA; border: 4px solid #BEBD95; border-radius: 60px; 
+            cursor: pointer; z-index: 1000; position: relative;
+        }
+        #song-name { margin-top: 25px; color: #E88E46; font-size: 1.2rem; z-index: 10; text-align: center; }
+    </style>
+</head>
+<body>
+
+    <div class="firecracker-container left-side">
+        <div class="string">福<br>🧨<br>🧨<br>🧨<br>🧨</div>
+        <div class="string">福<br>🧨<br>🧨<br>🧨<br>🧨</div>
+    </div>
+    <div class="firecracker-container right-side">
+        <div class="string">福<br>🧨<br>🧨<br>🧨<br>🧨</div>
+        <div class="string">福<br>🧨<br>🧨<br>🧨<br>🧨</div>
+    </div>
+
+    <h1>CHÚC MỪNG NĂM MỚI 2026</h1>
+    <button id="welcome-btn">BẤM ĐỂ COUNTDOWN 🌸</button>
+    <div id="song-name">Sẵn sàng khai xuân...</div>
+
+    <audio id="mySong"></audio>
+
+    <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
+
+    <script>
+        const btn = document.getElementById('welcome-btn');
+        const audio = document.getElementById('mySong');
+        const nameLabel = document.getElementById('song-name');
+        
+        const playlist = [
+            { n: "Con bướm xuân", u: "CBC.mp3" },
+            { n: "Đêm giao thừa", u: "DGT.mp3" },
+            { n: "Long phụng sum vầy", u: "LPSV.mp3" },
+            { n: "Happy New Year", u: "HNY.mp3" }
+        ];
+
+        let index = 0;
+        let isFirstClick = true;
+        let fireworkTimer = null;
+
+        // Âm thanh bạn gửi
+        const countdownSfx = new Audio('https://tiengdong.com/wp-content/uploads/tieng-dem-nguoc-happy-new-year-10s-va-vo-tay-reo-ho.mp3');
+        const fireworkSfx = new Audio('https://tiengdong.com/wp-content/uploads/tieng-phao-hoa-no-tren-bau-troi.mp3');
+        fireworkSfx.loop = true; // Cho tiếng pháo nổ lặp lại liên tục
+
+        function startFireworks() {
+            if (fireworkTimer) return; // Nếu đang chạy rồi thì thôi
+            fireworkSfx.play();
+            fireworkTimer = setInterval(() => {
+                confetti({
+                    particleCount: 50,
+                    spread: 80,
+                    origin: { x: Math.random(), y: Math.random() - 0.2 },
+                    colors: ['#D68687', '#E88E46', '#F2D5BA']
+                });
+            }, 500); // Cứ 0.5 giây nổ một lần liên tục
+        }
+
+        function playMusic() {
+            audio.src = playlist[index].u;
+            audio.play().catch(e => {
+                nameLabel.innerHTML = "⚠️ Lỗi file: " + playlist[index].u;
+            });
+            nameLabel.innerHTML = "🎶 Đang phát: " + playlist[index].n;
+            index = (index + 1) % playlist.length;
+        }
+
+        btn.onclick = function() {
+            if (isFirstClick) {
+                isFirstClick = false;
+                btn.style.display = 'none'; // Ẩn nút sau khi bấm lần đầu
+                nameLabel.innerHTML = "🕒 ĐANG ĐẾM NGƯỢC... 10s";
+                countdownSfx.play();
+
+                // Sau 10 giây đếm ngược thì chạy nhạc và pháo
+                setTimeout(() => {
+                    startFireworks();
+                    playMusic();
+                    btn.style.display = 'block'; // Hiện lại nút để đổi bài
+                    btn.innerHTML = "ĐỔI BÀI TIẾP THEO 🎊";
+                }, 10500); // 10.5 giây để khớp với tiếng đếm ngược
+            } else {
+                // Các lần bấm sau chỉ đổi nhạc
+                playMusic();
+            }
+        };
+    </script>
+</body>
+</html>
